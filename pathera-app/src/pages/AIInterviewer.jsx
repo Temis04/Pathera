@@ -1,3 +1,45 @@
+/*
+ * AI INTERVIEWER - VOICE IMPROVEMENTS
+ *
+ * CURRENT FEATURES:
+ * - Continuous speech recognition (won't cut off after pauses)
+ * - Friendly voice with adjusted pitch and rate
+ * - Real-time transcript display as you speak
+ *
+ * FOR BETTER VOICE QUALITY, INTEGRATE THESE APIS:
+ *
+ * 1. SPEECH-TO-TEXT (for better recording accuracy):
+ *    - OpenAI Whisper API: https://platform.openai.com/docs/guides/speech-to-text
+ *    - Google Cloud Speech-to-Text: https://cloud.google.com/speech-to-text
+ *    - AssemblyAI: https://www.assemblyai.com/
+ *
+ * 2. TEXT-TO-SPEECH (for more natural, friendly voice):
+ *    - ElevenLabs: https://elevenlabs.io/ (Most natural and emotional voices)
+ *    - OpenAI TTS: https://platform.openai.com/docs/guides/text-to-speech
+ *    - Google Cloud Text-to-Speech: https://cloud.google.com/text-to-speech
+ *    - Amazon Polly: https://aws.amazon.com/polly/
+ *
+ * 3. INTEGRATION EXAMPLE (Replace speakText function):
+ *    const speakText = async (text) => {
+ *      const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/voice-id', {
+ *        method: 'POST',
+ *        headers: {
+ *          'Content-Type': 'application/json',
+ *          'xi-api-key': 'YOUR_API_KEY'
+ *        },
+ *        body: JSON.stringify({ text, voice_settings: { stability: 0.5, similarity_boost: 0.75 } })
+ *      });
+ *      const audioBlob = await response.blob();
+ *      const audioUrl = URL.createObjectURL(audioBlob);
+ *      const audio = new Audio(audioUrl);
+ *      audio.play();
+ *    };
+ *
+ * 4. FOR RECORDING (Replace toggleRecording function):
+ *    Use MediaRecorder API to capture audio, then send to Whisper API
+ *    See: https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder
+ */
+
 import { useState, useEffect, useRef } from 'react';
 import {
   MessageSquare,
@@ -30,35 +72,68 @@ const AIInterviewer = () => {
 
   const recognitionRef = useRef(null);
   const synthRef = useRef(window.speechSynthesis);
+  const interimTranscriptRef = useRef('');
 
   // Initialize speech recognition
   useEffect(() => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = false;
-      recognitionRef.current.interimResults = false;
+      recognitionRef.current.continuous = true; // Keep listening continuously
+      recognitionRef.current.interimResults = true; // Show results as you speak
       recognitionRef.current.lang = 'en-US';
+      recognitionRef.current.maxAlternatives = 1;
 
       recognitionRef.current.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        setCurrentMessage(transcript);
-        setIsRecording(false);
-        setIsListening(false);
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript + ' ';
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        // Update the message field with interim results
+        if (interimTranscript) {
+          setCurrentMessage(interimTranscriptRef.current + interimTranscript);
+        }
+
+        // Add final transcript to the accumulated text
+        if (finalTranscript) {
+          interimTranscriptRef.current += finalTranscript;
+          setCurrentMessage(interimTranscriptRef.current);
+        }
       };
 
       recognitionRef.current.onerror = (event) => {
         console.error('Speech recognition error:', event.error);
-        setIsRecording(false);
-        setIsListening(false);
         if (event.error === 'not-allowed') {
           alert('Microphone access denied. Please allow microphone access to use voice features.');
+          setIsRecording(false);
+          setIsListening(false);
+        } else if (event.error === 'no-speech') {
+          // Don't stop on no-speech, just continue listening
+          console.log('No speech detected, continuing...');
+        } else if (event.error === 'aborted') {
+          // Recognition was aborted, don't show error
+          setIsRecording(false);
+          setIsListening(false);
         }
       };
 
       recognitionRef.current.onend = () => {
-        setIsRecording(false);
-        setIsListening(false);
+        // If we're still supposed to be recording, restart it
+        if (isRecording) {
+          try {
+            recognitionRef.current.start();
+          } catch (error) {
+            console.log('Recognition already started');
+          }
+        }
       };
     }
 
@@ -70,7 +145,7 @@ const AIInterviewer = () => {
         synthRef.current.cancel();
       }
     };
-  }, []);
+  }, [isRecording]);
 
   const interviewTypes = [
     {
@@ -101,9 +176,25 @@ const AIInterviewer = () => {
 
     synthRef.current.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
-    utterance.volume = 1;
+
+    // Select a more natural-sounding voice if available
+    const voices = synthRef.current.getVoices();
+    // Prefer female voices as they often sound friendlier, or voices with "natural" in the name
+    const preferredVoice = voices.find(voice =>
+      voice.name.includes('Google') ||
+      voice.name.includes('Female') ||
+      voice.name.includes('Samantha') ||
+      voice.name.includes('Natural')
+    ) || voices.find(voice => voice.lang === 'en-US') || voices[0];
+
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
+
+    // Adjust settings for a warmer, friendlier tone
+    utterance.rate = 0.95; // Slightly slower for clarity and friendliness
+    utterance.pitch = 1.1; // Slightly higher pitch for warmth
+    utterance.volume = 0.9; // Slightly softer for a gentler feel
 
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
@@ -148,6 +239,8 @@ const AIInterviewer = () => {
       setIsListening(false);
     } else {
       try {
+        // Reset the interim transcript when starting new recording
+        interimTranscriptRef.current = '';
         recognitionRef.current.start();
         setIsRecording(true);
         setIsListening(true);
@@ -170,6 +263,7 @@ const AIInterviewer = () => {
 
     setMessages([...messages, userMessage]);
     setCurrentMessage('');
+    interimTranscriptRef.current = ''; // Reset the transcript accumulator
     stopSpeaking();
 
     // Simulate AI response - Replace with your actual AI API integration
