@@ -122,14 +122,14 @@ const AIInterviewer = () => {
         <div className="pt-24 pb-12 px-4">
           <div className="max-w-6xl mx-auto">
             {/* Header */}
-            <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-8 text-white mb-8">
+            <div className="bg-gradient-to-r from-dark-700 to-dark-900 rounded-2xl p-8 text-white mb-8">
               <div className="flex items-center space-x-4">
                 <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
                   <MessageSquare className="w-8 h-8" />
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold mb-2">AI Interviewer</h1>
-                  <p className="text-green-100">
+                  <p className="text-dark-100">
                     Practice realistic interviews with AI and get instant feedback
                   </p>
                 </div>
@@ -157,7 +157,7 @@ const AIInterviewer = () => {
                       <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
                         {type.difficulty}
                       </span>
-                      <Play className="w-5 h-5 text-green-600 group-hover:translate-x-1 transition-transform" />
+                      <Play className="w-5 h-5 text-dark-600 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
                 ))}
@@ -205,8 +205,8 @@ const AIInterviewer = () => {
           <div className="bg-white rounded-xl p-6 shadow-lg mb-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <MessageSquare className="w-6 h-6 text-green-600" />
+                <div className="w-12 h-12 bg-dark-100 rounded-lg flex items-center justify-center">
+                  <MessageSquare className="w-6 h-6 text-dark-600" />
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-gray-900">
@@ -248,7 +248,7 @@ const AIInterviewer = () => {
                 <div
                   className={`max-w-[70%] rounded-xl p-4 ${
                     message.sender === 'user'
-                      ? 'bg-green-600 text-white'
+                      ? 'bg-dark-600 text-white'
                       : 'bg-gray-100 text-gray-900'
                   }`}
                 >
@@ -281,12 +281,12 @@ const AIInterviewer = () => {
                   onChange={(e) => setCurrentMessage(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
                   placeholder="Type your answer..."
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dark-500 focus:border-transparent outline-none"
                 />
                 <button
                   onClick={sendMessage}
                   disabled={!currentMessage.trim()}
-                  className="p-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="p-3 bg-dark-600 text-white rounded-lg hover:bg-dark-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   <Send className="w-5 h-5" />
                 </button>
@@ -299,9 +299,9 @@ const AIInterviewer = () => {
             <div className="bg-white rounded-xl p-6 shadow-lg mt-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Interview Feedback</h3>
               <div className="space-y-4">
-                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
-                  <h4 className="font-bold text-green-900 mb-2">Strengths</h4>
-                  <ul className="space-y-1 text-green-800 text-sm">
+                <div className="bg-dark-50 border-l-4 border-dark-500 p-4 rounded">
+                  <h4 className="font-bold text-dark-900 mb-2">Strengths</h4>
+                  <ul className="space-y-1 text-dark-800 text-sm">
                     <li>• Clear and concise responses</li>
                     <li>• Good use of specific examples</li>
                     <li>• Professional communication style</li>

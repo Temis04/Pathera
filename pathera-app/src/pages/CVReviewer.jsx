@@ -117,7 +117,7 @@ const CVReviewer = () => {
       <div className="pt-24 pb-12 px-4">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-8 text-white mb-8">
+          <div className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-2xl p-8 text-white mb-8">
             <div className="flex items-center space-x-4">
               <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
                 <FileText className="w-8 h-8" />

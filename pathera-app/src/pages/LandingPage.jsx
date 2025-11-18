@@ -23,19 +23,19 @@ const LandingPage = () => {
       icon: MessageSquare,
       title: 'AI Interviewer',
       description: 'Practice interviews with our AI-powered interviewer. Get real-time feedback and improve your interview skills.',
-      color: 'from-blue-500 to-blue-600',
+      color: 'from-primary-500 to-primary-700',
     },
     {
       icon: FileText,
       title: 'CV Reviewer',
       description: 'Get instant feedback on your CV. Our AI analyzes your resume and provides actionable improvements.',
-      color: 'from-purple-500 to-purple-600',
+      color: 'from-purple-600 to-purple-800',
     },
     {
       icon: Briefcase,
       title: 'Work Experience Finder',
       description: 'Discover relevant work experience opportunities tailored to your career goals and skills.',
-      color: 'from-green-500 to-green-600',
+      color: 'from-dark-700 to-dark-900',
     },
   ];
 
