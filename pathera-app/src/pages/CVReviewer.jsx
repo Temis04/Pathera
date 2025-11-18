@@ -464,37 +464,6 @@ const CVReviewer = () => {
               </div>
             </div>
           )}
-
-          {/* Integration Note */}
-          <div className="mt-8 bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
-              🔧 Ready for Replit Integration
-            </h3>
-            <p className="text-gray-700 mb-2">
-              This page is set up for easy integration with your Replit CV reviewer. The review object includes:
-            </p>
-            <ul className="list-disc list-inside space-y-1 text-gray-700 ml-4 mb-4">
-              <li>Overall score and rating</li>
-              <li>Strengths with detailed feedback</li>
-              <li>Improvements with step-by-step guidance</li>
-              <li>Career path recommendations based on target role</li>
-            </ul>
-            <p className="text-gray-700 mb-2">
-              Replace the <code className="bg-yellow-100 px-1 rounded">handleReview</code> function with your API call:
-            </p>
-            <pre className="mt-4 bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
-{`const response = await fetch('YOUR_REPLIT_API_URL', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    cv: cvText,
-    targetRole: targetRole
-  })
-});
-const reviewData = await response.json();
-setReview(reviewData);`}
-            </pre>
-          </div>
         </div>
       </div>
     </div>
