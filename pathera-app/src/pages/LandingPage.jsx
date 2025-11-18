@@ -307,7 +307,7 @@ const LandingPage = () => {
             <img
               src="/pathera-logo.png"
               alt="Pathera Logo"
-              className="h-16 w-auto"
+              className="h-10 w-auto"
               onError={(e) => {
                 e.target.style.display = 'none';
                 e.target.nextElementSibling.style.display = 'flex';
