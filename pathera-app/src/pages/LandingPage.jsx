@@ -303,20 +303,6 @@ const LandingPage = () => {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 px-4">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center mb-4">
-            <img
-              src="/pathera-logo.png"
-              alt="Pathera Logo"
-              className="h-[100px] w-auto"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextElementSibling.style.display = 'flex';
-              }}
-            />
-            <div className="hidden w-12 h-12 bg-gradient-to-r from-primary-500 to-primary-700 rounded-lg items-center justify-center">
-              <span className="text-white font-bold text-2xl">P</span>
-            </div>
-          </div>
           <p className="text-gray-400 mb-4">
             Empowering your career journey with AI
           </p>
