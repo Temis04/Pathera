@@ -35,14 +35,14 @@ const Navbar = ({ onLoginClick }) => {
   return (
     <nav className="bg-white shadow-lg fixed w-full top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-28">
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               {/* Replace 'pathera-logo.png' with your actual logo filename */}
               <img
                 src="/pathera-logo.png"
                 alt="Pathera Logo"
-                className="h-10 w-auto"
+                className="h-[100px] w-auto"
                 onError={(e) => {
                   // Fallback to text logo if image doesn't load
                   e.target.style.display = 'none';
