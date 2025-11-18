@@ -38,23 +38,20 @@ const Navbar = ({ onLoginClick }) => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <div className="flex items-center space-x-3">
-                {/* Replace 'pathera-logo.png' with your actual logo filename */}
-                <img
-                  src="/pathera-logo.png"
-                  alt="Pathera Logo"
-                  className="h-14 w-auto"
-                  onError={(e) => {
-                    // Fallback to text logo if image doesn't load
-                    e.target.style.display = 'none';
-                    e.target.nextElementSibling.style.display = 'flex';
-                  }}
-                />
-                {/* Fallback text logo (hidden by default, shows if image fails) */}
-                <div className="hidden w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-700 rounded-lg items-center justify-center">
-                  <span className="text-white font-bold text-xl">P</span>
-                </div>
-                <span className="text-2xl font-bold text-gray-900">Pathera</span>
+              {/* Replace 'pathera-logo.png' with your actual logo filename */}
+              <img
+                src="/pathera-logo.png"
+                alt="Pathera Logo"
+                className="h-16 w-auto"
+                onError={(e) => {
+                  // Fallback to text logo if image doesn't load
+                  e.target.style.display = 'none';
+                  e.target.nextElementSibling.style.display = 'flex';
+                }}
+              />
+              {/* Fallback text logo (hidden by default, shows if image fails) */}
+              <div className="hidden w-12 h-12 bg-gradient-to-r from-primary-500 to-primary-700 rounded-lg items-center justify-center">
+                <span className="text-white font-bold text-2xl">P</span>
               </div>
             </Link>
           </div>
