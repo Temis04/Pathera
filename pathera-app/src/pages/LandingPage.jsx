@@ -43,60 +43,67 @@ const LandingPage = () => {
     {
       name: 'Free',
       price: '0',
+      currency: '£',
       features: [
-        '3 CV Reviews per month',
-        '5 AI Interview sessions',
-        'Basic analytics',
-        'Email support',
+        'CV Builder (1 practice/24 hours)',
+        'Free Community Access',
+        'AI Interview Practice (1 practice/24 hours)',
+        'Community Access',
+        'Limited Learning Resources',
       ],
       popular: false,
+      description: '',
     },
     {
       name: 'Pro',
-      price: '19',
+      price: '2.99',
+      currency: '£',
       features: [
-        'Unlimited CV Reviews',
-        'Unlimited AI Interviews',
-        'Advanced analytics',
-        'Priority support',
-        'Personal statement review',
-        'Interview recording',
+        'Unlimited AI Interview Sessions',
+        'Advanced CV Builder & Analytics',
+        'Premium Learning Resources',
+        'Priority Support',
+        'Community Access',
+        'Early Access to New Features',
       ],
       popular: true,
+      description: 'Ideal for active job seekers and career changers',
     },
     {
       name: 'Enterprise',
-      price: '49',
+      price: 'Contact Us',
+      currency: '',
       features: [
-        'Everything in Pro',
-        'Team collaboration',
-        'Custom AI training',
-        'Dedicated account manager',
-        'API access',
-        'Custom integrations',
+        'Custom AI Interview Scenarios',
+        'Team CV Management',
+        'Dedicated Support',
+        'Custom Integration Options',
+        'Advanced Analytics & Reporting',
+        'Volume Discounts',
       ],
       popular: false,
+      description: 'Custom solutions for organizations and teams',
     },
   ];
 
   const testimonials = [
     {
-      name: 'Sarah Johnson',
-      role: 'Software Engineer',
+      name: 'Asar Ali',
+      handle: '@asarali',
       rating: 5,
-      text: 'Pathera helped me land my dream job! The AI interviewer was incredibly realistic and the CV feedback was spot-on.',
+      text: 'The platform has really helped me stay focused on my goals and see what\'s possible.',
     },
     {
-      name: 'Michael Chen',
-      role: 'Product Manager',
+      name: 'Mohammed Hassan',
+      handle: '@mohammedhassan',
       rating: 5,
-      text: 'The personal statement reviewer gave me insights I never considered. Highly recommend to anyone job hunting!',
+      text: 'The site is super easy to use and understand, especially for someone like me just starting out.',
     },
     {
-      name: 'Emma Williams',
-      role: 'Data Scientist',
+      name: 'Jemimah Omombo',
+      handle: '@jemimahomombo',
       rating: 5,
-      text: 'Best career preparation platform I\'ve used. The AI feedback is detailed and actually helpful.',
+      text: 'Pathera is clean and looks professional.',
     },
   ];
 
@@ -212,11 +219,22 @@ const LandingPage = () => {
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">
                   {plan.name}
                 </h3>
+                {plan.description && (
+                  <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
+                )}
                 <div className="mb-6">
-                  <span className="text-5xl font-bold text-gray-900">
-                    ${plan.price}
-                  </span>
-                  <span className="text-gray-600">/month</span>
+                  {plan.price === 'Contact Us' ? (
+                    <span className="text-3xl font-bold text-gray-900">
+                      Contact Us
+                    </span>
+                  ) : (
+                    <>
+                      <span className="text-5xl font-bold text-gray-900">
+                        {plan.currency}{plan.price}
+                      </span>
+                      <span className="text-gray-600">/month</span>
+                    </>
+                  )}
                 </div>
                 <ul className="space-y-4 mb-8">
                   {plan.features.map((feature, i) => (
@@ -272,7 +290,7 @@ const LandingPage = () => {
                       {testimonial.name}
                     </div>
                     <div className="text-sm text-gray-600">
-                      {testimonial.role}
+                      {testimonial.handle}
                     </div>
                   </div>
                 </div>
