@@ -84,6 +84,12 @@ const Navbar = ({ onLoginClick }) => {
                 >
                   AI Interviewer
                 </Link>
+                <Link
+                  to="/work-experience"
+                  className="text-gray-700 hover:text-primary-600 transition-colors"
+                >
+                  Work Experience
+                </Link>
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2 text-gray-700">
                     <User className="w-5 h-5" />
@@ -173,6 +179,13 @@ const Navbar = ({ onLoginClick }) => {
                   onClick={() => setIsOpen(false)}
                 >
                   AI Interviewer
+                </Link>
+                <Link
+                  to="/work-experience"
+                  className="block px-3 py-2 text-gray-700 hover:bg-primary-50 rounded-md"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Work Experience
                 </Link>
                 <div className="px-3 py-2 text-gray-700 font-medium">
                   {user.name}

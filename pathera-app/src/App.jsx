@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import CVReviewer from './pages/CVReviewer';
 import PersonalStatement from './pages/PersonalStatement';
 import AIInterviewer from './pages/AIInterviewer';
+import WorkExperience from './pages/WorkExperience';
 
 function App() {
   return (
@@ -42,6 +43,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AIInterviewer />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/work-experience"
+            element={
+              <ProtectedRoute>
+                <WorkExperience />
               </ProtectedRoute>
             }
           />

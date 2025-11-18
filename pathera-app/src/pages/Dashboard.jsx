@@ -3,6 +3,7 @@ import {
   FileText,
   MessageSquare,
   BookOpen,
+  Briefcase,
   TrendingUp,
   Calendar,
   Award,
@@ -44,6 +45,14 @@ const Dashboard = () => {
       color: 'from-dark-700 to-dark-900',
       path: '/ai-interviewer',
       completed: user.progress.interviewsCompleted,
+    },
+    {
+      icon: Briefcase,
+      title: 'Work Experience',
+      description: 'Find internships and work opportunities',
+      color: 'from-orange-600 to-orange-800',
+      path: '/work-experience',
+      completed: 0,
     },
   ];
 
@@ -134,7 +143,7 @@ const Dashboard = () => {
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
               Your Career Tools
             </h2>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {tools.map((tool, index) => (
                 <div
                   key={index}
