@@ -256,28 +256,6 @@ const AIInterviewer = () => {
               </div>
             </div>
 
-            {/* Voice Features Notice */}
-            <div className="bg-primary-50 border-l-4 border-primary-500 rounded-lg p-6 mb-8">
-              <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center space-x-2">
-                <Mic className="w-5 h-5 text-primary-600" />
-                <span>Voice AI Features Enabled</span>
-              </h3>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start space-x-2">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <span><strong>Speech-to-Text:</strong> Click the microphone button to answer questions with your voice</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <span><strong>Text-to-Speech:</strong> AI interviewer will read questions out loud</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="text-primary-600 mt-1">•</span>
-                  <span><strong>Natural Conversation:</strong> Practice as if you're in a real interview</span>
-                </li>
-              </ul>
-            </div>
-
             {/* Interview Types */}
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
@@ -306,35 +284,6 @@ const AIInterviewer = () => {
               </div>
             </div>
 
-            {/* Tips */}
-            <div className="mt-8 bg-blue-50 rounded-xl p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
-                <Award className="w-5 h-5 text-blue-600" />
-                <span>Interview Tips</span>
-              </h3>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start space-x-2">
-                  <span className="text-blue-600 mt-1">•</span>
-                  <span>Take your time to think before answering</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="text-blue-600 mt-1">•</span>
-                  <span>Use the STAR method for behavioral questions (Situation, Task, Action, Result)</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="text-blue-600 mt-1">•</span>
-                  <span>Be specific with examples from your experience</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="text-blue-600 mt-1">•</span>
-                  <span>Practice makes perfect - try different interview types</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="text-blue-600 mt-1">•</span>
-                  <span>Speak clearly when using voice features for better recognition</span>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>
@@ -502,50 +451,6 @@ const AIInterviewer = () => {
             </div>
           )}
 
-          {/* Integration Instructions */}
-          <div className="mt-8 bg-purple-50 border-l-4 border-purple-500 rounded-lg p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
-              🎤 Voice AI Integration
-            </h3>
-            <p className="text-gray-700 mb-3">
-              This AI Interviewer includes built-in browser voice features:
-            </p>
-            <div className="space-y-3 text-sm text-gray-700">
-              <div>
-                <strong className="text-purple-900">Currently Working:</strong>
-                <ul className="list-disc ml-6 mt-1 space-y-1">
-                  <li>Web Speech API for speech-to-text (browser microphone)</li>
-                  <li>Speech Synthesis API for text-to-speech (AI voice)</li>
-                  <li>Real-time voice status indicators</li>
-                  <li>Toggle voice on/off</li>
-                </ul>
-              </div>
-              <div>
-                <strong className="text-purple-900">To Integrate External Voice AI API:</strong>
-                <ul className="list-disc ml-6 mt-1 space-y-1">
-                  <li><strong>OpenAI Whisper API:</strong> Replace speech recognition with Whisper for better accuracy</li>
-                  <li><strong>Google Cloud Speech-to-Text:</strong> For production-grade transcription</li>
-                  <li><strong>ElevenLabs / Azure TTS:</strong> For more natural AI voice responses</li>
-                  <li><strong>Your Custom API:</strong> Send audio/text to your backend and receive AI responses</li>
-                </ul>
-              </div>
-            </div>
-            <div className="mt-4 bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto">
-              <code>{`// Example: Integrate with OpenAI Whisper API
-const transcribeAudio = async (audioBlob) => {
-  const formData = new FormData();
-  formData.append('file', audioBlob);
-
-  const response = await fetch('YOUR_API_URL/transcribe', {
-    method: 'POST',
-    body: formData
-  });
-
-  const data = await response.json();
-  setCurrentMessage(data.transcript);
-};`}</code>
-            </div>
-          </div>
         </div>
       </div>
     </div>

@@ -159,27 +159,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Quick Tips */}
-          <div className="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center space-x-2">
-              <TrendingUp className="w-5 h-5 text-blue-600" />
-              <span>Quick Tips for Success</span>
-            </h3>
-            <ul className="space-y-2 text-gray-700">
-              <li className="flex items-start space-x-2">
-                <span className="text-blue-600 mt-1">•</span>
-                <span>Review your CV regularly to keep it updated with new skills and experiences</span>
-              </li>
-              <li className="flex items-start space-x-2">
-                <span className="text-blue-600 mt-1">•</span>
-                <span>Practice interviews consistently to build confidence</span>
-              </li>
-              <li className="flex items-start space-x-2">
-                <span className="text-blue-600 mt-1">•</span>
-                <span>Tailor your personal statement for each application</span>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
