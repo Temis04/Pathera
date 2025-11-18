@@ -83,21 +83,18 @@ const LandingPage = () => {
     {
       name: 'Sarah Johnson',
       role: 'Software Engineer',
-      image: '👩‍💻',
       rating: 5,
       text: 'Pathera helped me land my dream job! The AI interviewer was incredibly realistic and the CV feedback was spot-on.',
     },
     {
       name: 'Michael Chen',
       role: 'Product Manager',
-      image: '👨‍💼',
       rating: 5,
       text: 'The personal statement reviewer gave me insights I never considered. Highly recommend to anyone job hunting!',
     },
     {
       name: 'Emma Williams',
       role: 'Data Scientist',
-      image: '👩‍🔬',
       rating: 5,
       text: 'Best career preparation platform I\'ve used. The AI feedback is detailed and actually helpful.',
     },
@@ -270,7 +267,6 @@ const LandingPage = () => {
                 </div>
                 <p className="text-gray-600 mb-6 italic">"{testimonial.text}"</p>
                 <div className="flex items-center space-x-3">
-                  <div className="text-4xl">{testimonial.image}</div>
                   <div>
                     <div className="font-bold text-gray-900">
                       {testimonial.name}
