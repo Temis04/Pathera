@@ -62,6 +62,7 @@ const AIInterviewer = () => {
   const { user, updateProgress } = useAuth();
   const [interviewStarted, setInterviewStarted] = useState(false);
   const [interviewType, setInterviewType] = useState('');
+  const [careerField, setCareerField] = useState('');
   const [messages, setMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [isRecording, setIsRecording] = useState(false);
@@ -69,10 +70,13 @@ const AIInterviewer = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [isListening, setIsListening] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [showCareerSelection, setShowCareerSelection] = useState(false);
 
   const recognitionRef = useRef(null);
   const synthRef = useRef(window.speechSynthesis);
   const interimTranscriptRef = useRef('');
+  const questionsRef = useRef([]);
 
   // Initialize speech recognition
   useEffect(() => {
@@ -147,11 +151,22 @@ const AIInterviewer = () => {
     };
   }, [isRecording]);
 
+  const careerFields = [
+    { id: 'software', name: 'Software Engineering', icon: '💻' },
+    { id: 'finance', name: 'Finance & Banking', icon: '💼' },
+    { id: 'law', name: 'Law', icon: '⚖️' },
+    { id: 'engineering', name: 'Engineering', icon: '🔧' },
+    { id: 'medicine', name: 'Medicine & Healthcare', icon: '⚕️' },
+    { id: 'marketing', name: 'Marketing', icon: '📱' },
+    { id: 'consulting', name: 'Consulting', icon: '📊' },
+    { id: 'data', name: 'Data Science', icon: '📈' },
+  ];
+
   const interviewTypes = [
     {
       id: 'technical',
       title: 'Technical Interview',
-      description: 'Practice coding and technical problem-solving questions',
+      description: 'Practice technical and problem-solving questions',
       icon: '💻',
       difficulty: 'Advanced',
     },
@@ -170,6 +185,239 @@ const AIInterviewer = () => {
       difficulty: 'Beginner',
     },
   ];
+
+  // Question banks for different careers and interview types
+  const questionBanks = {
+    software: {
+      technical: [
+        "Tell me about yourself and your experience with software development.",
+        "What programming languages are you most proficient in and why?",
+        "Can you explain the difference between object-oriented and functional programming?",
+        "Describe a challenging bug you've encountered and how you resolved it.",
+        "How do you approach writing clean, maintainable code?",
+        "What's your experience with version control systems like Git?",
+        "Explain how you would optimize a slow-running application.",
+        "What testing methodologies do you follow in your development process?",
+      ],
+      behavioral: [
+        "Tell me about yourself and your journey into software engineering.",
+        "Describe a time when you had to learn a new technology quickly. How did you approach it?",
+        "Tell me about a project you're most proud of and why.",
+        "How do you handle feedback and code reviews from your peers?",
+        "Describe a situation where you disagreed with a team member about a technical decision.",
+        "Tell me about a time you failed or made a significant mistake. What did you learn?",
+        "How do you stay updated with the latest technology trends?",
+        "Describe your ideal team environment and why.",
+      ],
+      general: [
+        "Tell me about yourself and what interests you about this role.",
+        "Why are you interested in software engineering?",
+        "What are your greatest strengths and weaknesses as a developer?",
+        "Where do you see yourself in 5 years?",
+        "Why do you want to work for our company?",
+        "What motivates you in your work?",
+      ],
+    },
+    finance: {
+      technical: [
+        "Tell me about yourself and your background in finance.",
+        "Explain the concept of time value of money and its applications.",
+        "How do you value a company using DCF analysis?",
+        "What's the difference between equity and debt financing?",
+        "Explain what happens when the Federal Reserve raises interest rates.",
+        "How would you assess the financial health of a company?",
+        "What financial metrics do you consider most important and why?",
+        "Walk me through a recent financial news story and its implications.",
+      ],
+      behavioral: [
+        "Tell me about yourself and why you're interested in finance.",
+        "Describe a time when you had to analyze complex data to make a recommendation.",
+        "Tell me about a time you worked under pressure with tight deadlines.",
+        "How do you handle situations where you make an error in your analysis?",
+        "Describe a situation where you had to explain complex financial concepts to non-experts.",
+        "Tell me about a time you identified a problem others had missed.",
+        "How do you prioritize multiple tasks with competing deadlines?",
+      ],
+      general: [
+        "Tell me about yourself and your interest in our firm.",
+        "Why finance over other career paths?",
+        "What areas of finance interest you most?",
+        "How do you keep up with financial markets and news?",
+        "What do you know about our company and recent deals?",
+        "Where do you see yourself in your finance career?",
+      ],
+    },
+    law: {
+      technical: [
+        "Tell me about yourself and your legal background.",
+        "Explain the difference between civil and criminal law.",
+        "How would you approach researching a complex legal issue?",
+        "Describe a recent legal case that interested you and why.",
+        "What is the doctrine of precedent and why is it important?",
+        "How do you handle conflicting legal authorities?",
+        "Explain the concept of duty of care in tort law.",
+        "Walk me through how you would prepare for a client meeting.",
+      ],
+      behavioral: [
+        "Tell me about yourself and why you want to practice law.",
+        "Describe a time when you had to argue a position you didn't personally agree with.",
+        "Tell me about a complex problem you had to solve with limited information.",
+        "How do you handle working on multiple cases simultaneously?",
+        "Describe a situation where you had to work with a difficult colleague or client.",
+        "Tell me about a time you had to meet a critical deadline under pressure.",
+        "How do you ensure attention to detail in your work?",
+      ],
+      general: [
+        "Tell me about yourself and what draws you to our firm.",
+        "Why law rather than another profession?",
+        "What area of law interests you most and why?",
+        "What do you know about our firm's practice areas?",
+        "How do you balance work-life demands in a legal career?",
+        "Where do you see your legal career in 5-10 years?",
+      ],
+    },
+    engineering: {
+      technical: [
+        "Tell me about yourself and your engineering background.",
+        "Describe a complex engineering problem you've solved.",
+        "How do you approach the design process for a new project?",
+        "Explain a time when you had to make a trade-off between different design parameters.",
+        "What CAD software are you proficient in and what have you built with it?",
+        "How do you ensure safety and compliance in your engineering work?",
+        "Describe your experience with project management and meeting deadlines.",
+        "What engineering principles do you apply most frequently?",
+      ],
+      behavioral: [
+        "Tell me about yourself and your passion for engineering.",
+        "Describe a project that didn't go as planned. How did you handle it?",
+        "Tell me about a time you had to work in a multidisciplinary team.",
+        "How do you approach learning new engineering tools or methodologies?",
+        "Describe a situation where you had to convince others of your design approach.",
+        "Tell me about a time you identified a potential safety issue.",
+        "How do you handle feedback on your technical work?",
+      ],
+      general: [
+        "Tell me about yourself and why you chose engineering.",
+        "What type of engineering projects excite you most?",
+        "Why are you interested in this engineering role?",
+        "What engineering innovations have inspired you recently?",
+        "How do you stay current with engineering advancements?",
+        "Where do you see yourself in your engineering career?",
+      ],
+    },
+    medicine: {
+      technical: [
+        "Tell me about yourself and your medical background.",
+        "Describe your clinical experience and what you've learned.",
+        "How do you approach diagnosing a patient with unclear symptoms?",
+        "What recent medical research or development has interested you?",
+        "Explain your understanding of evidence-based medicine.",
+        "How do you prioritize patient care in a busy clinical environment?",
+        "Describe your experience working with multidisciplinary healthcare teams.",
+      ],
+      behavioral: [
+        "Tell me about yourself and why you want to pursue medicine.",
+        "Describe a time when you had to deliver difficult news to someone.",
+        "Tell me about a challenging patient interaction and how you handled it.",
+        "How do you manage stress in high-pressure medical situations?",
+        "Describe a time you made a mistake. How did you handle it?",
+        "Tell me about a time you advocated for a patient.",
+        "How do you maintain empathy while staying professional?",
+      ],
+      general: [
+        "Tell me about yourself and your journey to medicine.",
+        "Why medicine and why this specialty?",
+        "What qualities make a good doctor?",
+        "How do you handle work-life balance in medicine?",
+        "What concerns you most about modern healthcare?",
+        "Where do you see yourself in your medical career?",
+      ],
+    },
+    marketing: {
+      technical: [
+        "Tell me about yourself and your marketing experience.",
+        "Describe a successful marketing campaign you've worked on.",
+        "How do you measure the effectiveness of a marketing campaign?",
+        "What digital marketing tools and platforms are you proficient in?",
+        "Explain your approach to market research and analysis.",
+        "How do you identify and target the right audience?",
+        "Describe your experience with SEO, SEM, or social media marketing.",
+        "How do you stay current with marketing trends and consumer behavior?",
+      ],
+      behavioral: [
+        "Tell me about yourself and what drew you to marketing.",
+        "Describe a marketing campaign that didn't perform well. What did you learn?",
+        "Tell me about a time you had to be creative under tight constraints.",
+        "How do you handle disagreements with stakeholders about campaign direction?",
+        "Describe a time you used data to change a marketing strategy.",
+        "Tell me about a time you had to manage multiple campaigns simultaneously.",
+      ],
+      general: [
+        "Tell me about yourself and your passion for marketing.",
+        "What brands do you admire and why?",
+        "Why are you interested in marketing for our company?",
+        "What marketing trends are you most excited about?",
+        "How do you measure success in your marketing work?",
+        "Where do you see yourself in the marketing field?",
+      ],
+    },
+    consulting: {
+      technical: [
+        "Tell me about yourself and your consulting experience.",
+        "Walk me through how you would approach a case study.",
+        "How do you structure a business problem?",
+        "Estimate the market size for [product/service].",
+        "What frameworks do you use for problem-solving?",
+        "Describe your experience with data analysis and presentation.",
+        "How would you advise a client looking to enter a new market?",
+      ],
+      behavioral: [
+        "Tell me about yourself and why consulting interests you.",
+        "Describe a time when you had to influence someone without authority.",
+        "Tell me about a complex problem you broke down into manageable parts.",
+        "How do you handle ambiguous situations with limited information?",
+        "Describe a time you had to quickly build rapport with a new client.",
+        "Tell me about a time you delivered difficult recommendations.",
+        "How do you manage competing priorities from different stakeholders?",
+      ],
+      general: [
+        "Tell me about yourself and what attracts you to consulting.",
+        "Why consulting over industry roles?",
+        "What do you know about our firm?",
+        "What type of consulting projects interest you most?",
+        "How do you handle the demanding nature of consulting work?",
+        "Where do you see yourself in consulting?",
+      ],
+    },
+    data: {
+      technical: [
+        "Tell me about yourself and your data science background.",
+        "Explain the bias-variance tradeoff in machine learning.",
+        "What's your experience with Python, R, or SQL?",
+        "Describe a data science project you've worked on from start to finish.",
+        "How do you handle missing or messy data?",
+        "Explain the difference between supervised and unsupervised learning.",
+        "What data visualization tools do you use and why?",
+        "How do you validate and test your models?",
+      ],
+      behavioral: [
+        "Tell me about yourself and your journey into data science.",
+        "Describe a time when your analysis led to unexpected insights.",
+        "Tell me about a project where you had to explain technical findings to non-technical stakeholders.",
+        "How do you approach learning new data science techniques?",
+        "Describe a time you had to work with imperfect or limited data.",
+        "Tell me about a time you had to defend your analytical approach.",
+      ],
+      general: [
+        "Tell me about yourself and what excites you about data science.",
+        "Why data science over other technical fields?",
+        "What data science problems interest you most?",
+        "How do you stay current with developments in data science?",
+        "What role do you see AI playing in the future?",
+        "Where do you see yourself in data science?",
+      ],
+    },
+  };
 
   const speakText = (text) => {
     if (!voiceEnabled || !synthRef.current) return;
@@ -210,10 +458,23 @@ const AIInterviewer = () => {
     }
   };
 
-  const startInterview = (type) => {
+  const selectInterviewType = (type) => {
     setInterviewType(type);
+    setShowCareerSelection(true);
+  };
+
+  const startInterview = (field) => {
+    setCareerField(field);
+    setShowCareerSelection(false);
     setInterviewStarted(true);
-    const welcomeMessage = "Hello! I'm your AI interviewer. Let's start with a simple question: Can you tell me about yourself and your background?";
+
+    // Load questions for the selected career and interview type
+    const questions = questionBanks[field][interviewType] || [];
+    questionsRef.current = questions;
+    setCurrentQuestionIndex(0);
+
+    const welcomeMessage = `Hello! I'm your AI interviewer. Today we'll be conducting a ${interviewTypes.find(t => t.id === interviewType)?.title.toLowerCase()} for ${careerFields.find(c => c.id === field)?.name}. ${questions[0]}`;
+
     setMessages([
       {
         sender: 'ai',
@@ -266,29 +527,43 @@ const AIInterviewer = () => {
     interimTranscriptRef.current = ''; // Reset the transcript accumulator
     stopSpeaking();
 
-    // Simulate AI response - Replace with your actual AI API integration
+    // Progress to next question
     setTimeout(() => {
-      const aiResponses = [
-        "That's interesting. Can you elaborate on that experience?",
-        "Great answer! Now, tell me about a challenge you faced and how you overcame it.",
-        "Excellent. How do you handle working under pressure?",
-        "Thank you for sharing that. What are your strengths and weaknesses?",
-        "Good response. Where do you see yourself in five years?",
-      ];
+      const questions = questionsRef.current;
+      const nextIndex = currentQuestionIndex + 1;
 
-      const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+      let aiResponse;
+
+      if (nextIndex < questions.length) {
+        // More questions available
+        const acknowledgments = [
+          "Thank you for that answer. ",
+          "I appreciate your response. ",
+          "That's helpful to know. ",
+          "Interesting perspective. ",
+          "Good, thank you. ",
+        ];
+        const randomAck = acknowledgments[Math.floor(Math.random() * acknowledgments.length)];
+        aiResponse = randomAck + questions[nextIndex];
+        setCurrentQuestionIndex(nextIndex);
+      } else {
+        // Interview complete
+        aiResponse = "Thank you for completing the interview! You've answered all my questions. I'll now provide you with feedback on your performance. Good luck with your career journey!";
+        setInterviewComplete(true);
+        updateProgress('interviewsCompleted');
+      }
 
       setMessages(prev => [
         ...prev,
         {
           sender: 'ai',
-          text: randomResponse,
+          text: aiResponse,
           timestamp: new Date(),
         },
       ]);
 
       if (voiceEnabled) {
-        speakText(randomResponse);
+        speakText(aiResponse);
       }
     }, 1500);
   };
@@ -315,9 +590,13 @@ const AIInterviewer = () => {
   const resetInterview = () => {
     setInterviewStarted(false);
     setInterviewType('');
+    setCareerField('');
+    setShowCareerSelection(false);
     setMessages([]);
     setCurrentMessage('');
     setInterviewComplete(false);
+    setCurrentQuestionIndex(0);
+    questionsRef.current = [];
     stopSpeaking();
   };
 
@@ -333,7 +612,7 @@ const AIInterviewer = () => {
       <div className="min-h-screen bg-gray-50">
         <Navbar />
 
-        <div className="pt-24 pb-12 px-4">
+        <div className="pt-32 pb-12 px-4">
           <div className="max-w-6xl mx-auto">
             {/* Header */}
             <div className="bg-gradient-to-r from-dark-700 to-dark-900 rounded-2xl p-8 text-white mb-8">
@@ -344,39 +623,75 @@ const AIInterviewer = () => {
                 <div>
                   <h1 className="text-3xl font-bold mb-2">AI Interviewer</h1>
                   <p className="text-dark-100">
-                    Practice realistic interviews with AI and get instant feedback
+                    Practice career-specific interviews with AI and get instant feedback
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Interview Types */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Choose Interview Type
-              </h2>
-              <div className="grid md:grid-cols-3 gap-6">
-                {interviewTypes.map((type) => (
-                  <div
-                    key={type.id}
-                    className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow cursor-pointer group"
-                    onClick={() => startInterview(type.id)}
-                  >
-                    <div className="text-5xl mb-4">{type.icon}</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      {type.title}
-                    </h3>
-                    <p className="text-gray-600 mb-4">{type.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                        {type.difficulty}
-                      </span>
-                      <Play className="w-5 h-5 text-dark-600 group-hover:translate-x-1 transition-transform" />
+            {!showCareerSelection ? (
+              /* Interview Types */
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  Step 1: Choose Interview Type
+                </h2>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {interviewTypes.map((type) => (
+                    <div
+                      key={type.id}
+                      className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow cursor-pointer group"
+                      onClick={() => selectInterviewType(type.id)}
+                    >
+                      <div className="text-5xl mb-4">{type.icon}</div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        {type.title}
+                      </h3>
+                      <p className="text-gray-600 mb-4">{type.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                          {type.difficulty}
+                        </span>
+                        <Play className="w-5 h-5 text-dark-600 group-hover:translate-x-1 transition-transform" />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              /* Career Field Selection */
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Step 2: Choose Your Career Field
+                  </h2>
+                  <button
+                    onClick={() => setShowCareerSelection(false)}
+                    className="text-gray-600 hover:text-gray-900 text-sm flex items-center space-x-1"
+                  >
+                    <span>← Back</span>
+                  </button>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  Selected: <span className="font-semibold text-primary-600">
+                    {interviewTypes.find(t => t.id === interviewType)?.title}
+                  </span>
+                </p>
+                <div className="grid md:grid-cols-4 gap-4">
+                  {careerFields.map((field) => (
+                    <div
+                      key={field.id}
+                      className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer group hover:scale-105"
+                      onClick={() => startInterview(field.id)}
+                    >
+                      <div className="text-4xl mb-3 text-center">{field.icon}</div>
+                      <h3 className="text-center font-bold text-gray-900 text-sm">
+                        {field.name}
+                      </h3>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
           </div>
         </div>
