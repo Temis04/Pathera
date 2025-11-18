@@ -43,7 +43,7 @@ const Navbar = ({ onLoginClick }) => {
                 <img
                   src="/pathera-logo.png"
                   alt="Pathera Logo"
-                  className="h-10 w-auto"
+                  className="h-14 w-auto"
                   onError={(e) => {
                     // Fallback to text logo if image doesn't load
                     e.target.style.display = 'none';
