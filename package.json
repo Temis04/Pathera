@@ -1,0 +1,18 @@
+{
+  "name": "pathera-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "pathera-app",
+    "pathera-backend"
+  ],
+  "scripts": {
+    "dev-frontend": "npm --prefix pathera-app run dev",
+    "dev-backend": "npm --prefix pathera-backend run dev",
+    "dev": "concurrently \"npm:dev-frontend\" \"npm:dev-backend\"",
+    "install-all": "npm --prefix pathera-app install && npm --prefix pathera-backend install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
